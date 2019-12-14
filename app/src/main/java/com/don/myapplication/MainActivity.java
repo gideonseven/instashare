@@ -3,6 +3,8 @@ package com.don.myapplication;
 
 import android.Manifest;
 import android.app.ProgressDialog;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
@@ -32,6 +34,9 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
     private static final int WRITE_REQUEST_CODE = 300;
     private static final String TAG = MainActivity.class.getSimpleName();
     private String url;
+
+    private String folder;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,7 +75,7 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
     }
 
     private boolean isCardPresent() {
-        return Environment.getExternalStorageState() == Environment.MEDIA_MOUNTED;
+        return Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED);
     }
 
 
@@ -98,7 +103,6 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
 
         private ProgressDialog progressDialog;
         private String fileName;
-        private String folder;
         private boolean isDownloaded;
 
         /**
@@ -200,5 +204,16 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
             Toast.makeText(getApplicationContext(),
                     message, Toast.LENGTH_LONG).show();
         }
+    }
+
+
+    public void shareToInstaStory(){
+        Uri uri = Uri.fromFile(new File(folder));
+        Intent shareIntent = new Intent(android.content.Intent.ACTION_SEND);
+        shareIntent.setType("image/*");
+        shareIntent.putExtra(Intent.EXTRA_STREAM, uri);
+        shareIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+        shareIntent.setPackage("com.instagram.android"); //Instagram App package
+        startActivity(Intent.createChooser(shareIntent, "Share.."));
     }
 }
