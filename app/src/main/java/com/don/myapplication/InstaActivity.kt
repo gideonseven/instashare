@@ -8,6 +8,7 @@ import android.net.Uri
 import android.os.AsyncTask
 import android.os.Build
 import android.os.Bundle
+import android.os.StrictMode
 import android.util.Log
 import android.widget.Button
 import android.widget.ImageView
@@ -19,6 +20,14 @@ import java.io.*
 import java.net.HttpURLConnection
 import java.net.MalformedURLException
 import java.net.URL
+import androidx.core.app.ComponentActivity.ExtraData
+import androidx.core.content.ContextCompat.getSystemService
+import android.icu.lang.UCharacter.GraphemeClusterBreak.T
+
+
+
+
+
 
 class InstaActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
@@ -241,14 +250,34 @@ class InstaActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
     }
 
-    private fun shareMan(uri: Uri) {
-        val shareIntent = Intent(Intent.ACTION_SEND)
-        shareIntent.putExtra(Intent.EXTRA_STREAM, uri)
-        shareIntent.putExtra(Intent.EXTRA_TEXT, "Ini ada textnya loch")
-        shareIntent.setType("image/*")
-        shareIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET)
-        shareIntent.setPackage("com.instagram.android")
-        startActivity(Intent.createChooser(shareIntent, "Share.."))
+    private fun shareMan(uri: Uri){
+        val TYPE = "image/*"
+
+        // Instantiate implicit intent with ADD_TO_STORY action,
+        // background asset, and attribution link
+
+
+        // Instantiate activity and verify it will resolve implicit intent
+
+        val share = Intent("com.instagram.share.ADD_TO_STORY")
+        share.type = TYPE
+        share.setPackage("com.instagram.android")
+        val builder = StrictMode.VmPolicy.Builder()
+        StrictMode.setVmPolicy(builder.build())
+
+        share.setDataAndType(uri, TYPE)
+        share.flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
+        share.putExtra(Intent.EXTRA_STREAM, uri)
+
+
+        if (this.packageManager.resolveActivity(share, 0) != null) {
+            this.startActivityForResult(share, 202)
+        } else {
+            Log.e("TAG","Sorry, an error ocurred.")
+        }
+
+
+
     }
 
 }
