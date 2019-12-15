@@ -1,28 +1,26 @@
 package com.don.myapplication
 
-import android.content.Context
-import androidx.appcompat.app.AppCompatActivity
+import android.content.ContextWrapper
+import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.net.Uri
+import android.os.AsyncTask
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
-import pub.devrel.easypermissions.EasyPermissions
-import java.net.URL
-import android.graphics.Bitmap
-import android.content.ContextWrapper
-import android.net.Uri
-import java.io.*
-import java.net.MalformedURLException
-import android.graphics.BitmapFactory
-import android.os.AsyncTask
 import android.widget.ImageView
 import android.widget.Toast
-import java.net.HttpURLConnection
-import android.content.Intent
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.FileProvider
-import android.os.Build
+import pub.devrel.easypermissions.EasyPermissions
+import java.io.*
+import java.net.HttpURLConnection
+import java.net.MalformedURLException
+import java.net.URL
 
 class InstaActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
-
 
     val MYTAG = "MY_MESSAGE"
     //    lateinit var  mProgressDialog: ProgressBar
@@ -85,7 +83,6 @@ class InstaActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                 )
             )
     }
-
 
     private inner class DownloadTask : AsyncTask<URL, Void, Bitmap>() {
         // Before the tasks execution
@@ -170,7 +167,6 @@ class InstaActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         }
     }
 
-
     // Custom method to convert string to url
     private fun stringToURL(urlString: String): URL? {
         try {
@@ -182,9 +178,8 @@ class InstaActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         return null
     }
 
-
     // Custom method to save a bitmap into internal storage
-    protected fun saveImageToInternalStorage(bitmap: Bitmap): Uri {
+    private fun saveImageToInternalStorage(bitmap: Bitmap): Uri {
         // Initialize ContextWrapper
         val wrapper = ContextWrapper(applicationContext)
 
@@ -223,7 +218,6 @@ class InstaActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         absolutePath = file.absolutePath
         return Uri.parse(file.absolutePath)
     }
-
 
     private fun shareIG() {
 
